@@ -60,6 +60,11 @@ class _MyHomePageState extends State<MyHomePage> {
       _counter++;
     });
   }
+  void _decrementCounter() {
+    setState(() {
+      _counter--;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,13 +100,31 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _counter % 2 == 0 
-              ? const Image(image: AssetImage('assets/satellite.png')) 
-              : const Image(image: AssetImage('assets/waterfall.png')),
+            SizedBox(
+              width: 400,
+              height: 500,
+              child: 
+                _counter % 2 == 0 
+                  ? const Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/p0001.webp')) 
+                  : const Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/p0002.webp'))
+            ),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _decrementCounter,
+                  child: const Text("<-"),
+                ),
+                ElevatedButton(
+                  onPressed: _incrementCounter,
+                  child: const Text("->"),
+                ),
+              ],
+            )
           ],
         ),
       ),

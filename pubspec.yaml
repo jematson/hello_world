@@ -62,6 +62,7 @@ flutter:
   assets:
     - assets/satellite.png
     - assets/waterfall.png
+    - assets/Kulusiinkut/Kulusiinkut/img/100/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
