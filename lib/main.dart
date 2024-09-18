@@ -48,28 +48,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _page = 0;
 
-  void _incrementCounter() {
+  void _incrementPage() {
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
+      // _page without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      _counter++;
+      if (_page < 22) {
+        _page++;
+      }
     });
   }
-  void _decrementCounter() {
+  void _decrementPage() {
     setState(() {
-      _counter--;
+      if(_page > 0){
+        _page--;
+      }
+    });
+  }
+  void _resetPage() {
+    setState(() {
+      _page = 0;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
+    // by the _incrementPage method above.
     //
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
@@ -104,35 +113,38 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 400,
               height: 500,
               child: 
-                _counter % 2 == 0 
-                  ? const Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/p0001.webp')) 
-                  : const Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/p0002.webp'))
+                _page == 0
+                  ? const Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/preview.webp'))
+                  : Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/p${_page.toString().padLeft(4, '0')}.webp')) 
             ),
             Text(
-              '$_counter',
+              'pg. $_page',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: _decrementCounter,
-                  child: const Text("<-"),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child:
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _decrementPage,
+                      child: const Text("<-"),
+                    ),
+                    ElevatedButton(
+                      onPressed: _incrementPage,
+                      child: const Text("->"),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: _incrementCounter,
-                  child: const Text("->"),
-                ),
-              ],
-            )
+            ),
+            ElevatedButton(
+              onPressed: _resetPage,
+              child: const Text("title"),
+            ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
