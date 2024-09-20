@@ -69,9 +69,14 @@ class _MyHomePageState extends State<MyHomePage> {
       }
     });
   }
-  void _resetPage() {
+  void _beginPage() {
     setState(() {
       _page = 0;
+    });
+  }
+  void _endPage() {
+    setState(()  {
+      _page = 22;
     });
   }
 
@@ -84,6 +89,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
@@ -115,18 +121,22 @@ class _MyHomePageState extends State<MyHomePage> {
               child: 
                 _page == 0
                   ? const Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/preview.webp'))
-                  : Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/p${_page.toString().padLeft(4, '0')}.webp')) 
+                  : Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/50/p${_page.toString().padLeft(4, '0')}.webp')) 
             ),
             Text(
               'pg. $_page',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(6),
               child:
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    ElevatedButton(
+                      onPressed: _beginPage,
+                      child: const Text("|<"),
+                    ),
                     ElevatedButton(
                       onPressed: _decrementPage,
                       child: const Text("<-"),
@@ -135,12 +145,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: _incrementPage,
                       child: const Text("->"),
                     ),
+                    ElevatedButton(
+                      onPressed: _endPage,
+                      child: const Text(">|"),
+                    ),
                   ],
                 ),
-            ),
-            ElevatedButton(
-              onPressed: _resetPage,
-              child: const Text("title"),
             ),
           ],
         ),
