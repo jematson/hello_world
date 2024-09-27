@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:xml/xml.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:collection/collection.dart';
 
 void main() {
   runApp(const MyApp());
@@ -68,7 +69,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     for (var page in pages) {
       final pageText = page.innerText;
-      pageList.add(pageText);
+
+      final pageP = page.findElements('p').firstOrNull;
+      String? pageImage;
+      if(pageP != null) {
+        final pageGraphic = pageP.findElements('graphic').firstOrNull;
+        if(pageGraphic != null){
+          pageImage = pageGraphic.getAttribute('url');
+        }
+      }
+      pageList.add({'image': pageImage ?? 'no image available', 'text': pageText});
     }
     setState(() {
       _pageTexts = pageList;
@@ -161,10 +171,11 @@ class _MyHomePageState extends State<MyHomePage> {
               child: 
                 _page == 0
                   ? const Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/preview.webp'))
-                  : Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/p${_page.toString().padLeft(4, '0')}.webp')) 
+                  : Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/${_pageTexts[_page]['image']}')) 
+                  //p${_page.toString().padLeft(4, '0')}.webp
             ),
             Text(
-              '$_page. '+_pageTexts[_page],
+              '$_page. ${_pageTexts[_page]['text']}',
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             Padding(
