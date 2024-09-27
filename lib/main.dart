@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:xml/xml.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Kulusiinkut'),
     );
   }
 }
@@ -49,6 +51,30 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _page = 0;
+  List _pageTexts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadAsset();
+  }
+  
+  Future<void> loadAsset() async {
+    final pageList = [];
+    String fileText = await rootBundle.loadString('assets/Kulusiinkut/Kulusiinkut/book.xml');
+    final document = XmlDocument.parse(fileText);
+    final bookBody = document.findElements('TEI').first.findElements('text').first.findElements('body').first;
+    final pages = bookBody.findAllElements('div');
+
+    for (var page in pages) {
+      final pageText = page.innerText;
+      pageList.add(pageText);
+    }
+    setState(() {
+      _pageTexts = pageList;
+    });
+  }
+  
 
   void _incrementPage() {
     setState(() {
@@ -82,6 +108,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    final double screenWidth = size.width;
+    final double screenHeight = size.height;
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementPage method above.
     //
@@ -95,7 +124,16 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: Center(
+      body: SingleChildScrollView(
+        /*
+        child: Column(
+          children: _fileContents.entries.map((entry) {
+            return Text(
+              'Page ${entry.key}: ${entry.value}',
+              style: Theme.of(context).textTheme.bodyLarge,
+            );
+          }).toList(),
+        ),*/
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -115,16 +153,18 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            SizedBox(
-              width: 400,
-              height: 500,
+            ConstrainedBox(
+              constraints: BoxConstraints (
+                maxHeight: 0.8 * screenHeight,
+                maxWidth: screenWidth
+              ),
               child: 
                 _page == 0
                   ? const Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/preview.webp'))
-                  : Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/50/p${_page.toString().padLeft(4, '0')}.webp')) 
+                  : Image(image: AssetImage('assets/Kulusiinkut/Kulusiinkut/img/100/p${_page.toString().padLeft(4, '0')}.webp')) 
             ),
             Text(
-              'pg. $_page',
+              '$_page. '+_pageTexts[_page],
               style: Theme.of(context).textTheme.headlineMedium,
             ),
             Padding(
